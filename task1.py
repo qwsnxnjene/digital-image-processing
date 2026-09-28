@@ -19,8 +19,23 @@ JPEG_QUALITY = 95
 UNDO_LIMIT = 5
 
 def image_to_arrays(img):
-    a = np.asarray(img.convert("RGB"), dtype=np.uint8)      # форма (h, w, 3)
-    return a[:, :, 0].copy(), a[:, :, 1].copy(), a[:, :, 2].copy()
+    img = img.convert("RGB")
+
+    width, height = img.size
+
+    r = np.empty((height, width), dtype=np.uint8)
+    g = np.empty((height, width), dtype=np.uint8)
+    b = np.empty((height, width), dtype=np.uint8)
+
+    for y in range(height):
+        for x in range(width):
+            pixel = img.getpixel((x, y))
+
+            r[y, x] = pixel[0]
+            g[y, x] = pixel[1]
+            b[y, x] = pixel[2]
+
+    return r, g, b
 
 
 def arrays_to_image(r, g, b):
