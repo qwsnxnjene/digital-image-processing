@@ -31,15 +31,16 @@ WEIGHT_R, WEIGHT_G, WEIGHT_B = 299, 587, 114
 
 METHODS = {
     "mean": "среднее арифметическое",
+    "weighted": "взвешенное",
 }
 
 
-# def gray_weighted(r, g, b):
-#     """Яркость как взвешенная сумма компонент. Все вычисления целочисленные."""
-#     s = (r.astype(np.uint32) * WEIGHT_R
-#          + g.astype(np.uint32) * WEIGHT_G
-#          + b.astype(np.uint32) * WEIGHT_B)
-#     return ((s + 500) // 1000).astype(np.uint8)       # +500: округление к ближайшему целому
+def gray_weighted(r, g, b):
+    """Яркость как взвешенная сумма компонент. Все вычисления целочисленные."""
+    s = (r.astype(np.uint32) * WEIGHT_R
+         + g.astype(np.uint32) * WEIGHT_G
+         + b.astype(np.uint32) * WEIGHT_B)
+    return ((s + 500) // 1000).astype(np.uint8)       # +500: округление к ближайшему целому
 
 
 def gray_mean(r, g, b):
@@ -48,10 +49,10 @@ def gray_mean(r, g, b):
     return ((s + 1) // 3).astype(np.uint8)             # округление к ближайшему целому
 
 
-GRAY_FUNCTIONS = {"mean": gray_mean}
+GRAY_FUNCTIONS = {"mean": gray_mean, "weighted": gray_weighted}
 
 
-def to_gray_image(img, roi=None, method="mean"):
+def to_gray_image(img, roi=None, method="weighted"):
     """Возвращает новое 24-битное RGB-изображение в градациях серого.
 
     Если задана зона интереса roi, в серое переводятся только пиксели внутри неё,
